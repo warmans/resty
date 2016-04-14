@@ -6,6 +6,19 @@ import (
 	"golang.org/x/net/context"
 )
 
+func Ctx(next CtxHandler) http.Handler {
+	return &CtxConvertMiddleware{NextHandler: next}
+}
+
+// UserRestrictMiddleware redirects user to login page if not logged in
+type CtxConvertMiddleware struct {
+	NextHandler CtxHandler
+}
+
+func (m *CtxConvertMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	m.NextHandler.ServeHTTP(rw, r, context.Background())
+}
+
 type CtxHandler interface {
 	ServeHTTP(rw http.ResponseWriter, r *http.Request, ctx context.Context)
 }
