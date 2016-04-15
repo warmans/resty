@@ -10,6 +10,7 @@ import (
 
 	"github.com/warmans/resty"
 	"golang.org/x/net/context"
+	"github.com/warmans/ctxhandler"
 )
 
 type SomeResource struct {
@@ -31,7 +32,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	//add functionality: resty.RESTHandler -> resty.CtxHandler -> http.Handler
-	mux.Handle("/resource", resty.Ctx(resty.Restful(&SomeResource{})))
+	mux.Handle("/resource", ctxhandler.Ctx(resty.Restful(&SomeResource{})))
 
 	log.Printf("Listening on localhost:8080. Try and send a POST or GET")
 	log.Fatal(http.ListenAndServe(":8080", mux))

@@ -4,24 +4,8 @@ import (
 	"net/http"
 
 	"golang.org/x/net/context"
+	"github.com/warmans/ctxhandler"
 )
-
-func Ctx(next CtxHandler) http.Handler {
-	return &CtxConvertMiddleware{NextHandler: next}
-}
-
-// UserRestrictMiddleware redirects user to login page if not logged in
-type CtxConvertMiddleware struct {
-	NextHandler CtxHandler
-}
-
-func (m *CtxConvertMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	m.NextHandler.ServeHTTP(rw, r, context.Background())
-}
-
-type CtxHandler interface {
-	ServeHTTP(rw http.ResponseWriter, r *http.Request, ctx context.Context)
-}
 
 type RESTHandler interface {
 	Before(rw http.ResponseWriter, r *http.Request, ctx context.Context)
@@ -103,7 +87,7 @@ func (h *DefaultRESTHandler) After(rw http.ResponseWriter, r *http.Request, ctx 
 // ------------------------
 // converter middleware to turn a normal handler into a restful one.
 
-func Restful(next RESTHandler) CtxHandler {
+func Restful(next RESTHandler) ctxhandler.CtxHandler {
 	return &RestfulConvertMiddleware{NextHandler: next}
 }
 
