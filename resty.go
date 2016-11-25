@@ -3,7 +3,6 @@ package resty
 import "net/http"
 
 type RESTHandler interface {
-	Before(rw http.ResponseWriter, r *http.Request)
 	HandleGet(rw http.ResponseWriter, r *http.Request)
 	HandlePost(rw http.ResponseWriter, r *http.Request)
 	HandlePut(rw http.ResponseWriter, r *http.Request)
@@ -19,7 +18,6 @@ type RESTHandler interface {
 	HandleUnlock(rw http.ResponseWriter, r *http.Request)
 	HandlePropFind(rw http.ResponseWriter, r *http.Request)
 	HandleView(rw http.ResponseWriter, r *http.Request)
-	After(rw http.ResponseWriter, r *http.Request)
 }
 
 // -----------------------
@@ -27,9 +25,6 @@ type RESTHandler interface {
 
 type DefaultRESTHandler struct{}
 
-func (h *DefaultRESTHandler) Before(rw http.ResponseWriter, r *http.Request) {
-	//do nothing
-}
 func (h *DefaultRESTHandler) HandleGet(rw http.ResponseWriter, r *http.Request) {
 	http.Error(rw, "Not Implemented", http.StatusNotImplemented)
 }
@@ -75,9 +70,6 @@ func (h *DefaultRESTHandler) HandlePropFind(rw http.ResponseWriter, r *http.Requ
 func (h *DefaultRESTHandler) HandleView(rw http.ResponseWriter, r *http.Request) {
 	http.Error(rw, "Not Implemented", http.StatusNotImplemented)
 }
-func (h *DefaultRESTHandler) After(rw http.ResponseWriter, r *http.Request) {
-	//do nothing
-}
 
 // ------------------------
 // converter middleware to turn a normal handler into a restful one.
@@ -92,7 +84,6 @@ type RestfulConvertMiddleware struct {
 }
 
 func (m *RestfulConvertMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	m.NextHandler.Before(rw, r)
 	switch {
 	case r.Method == "GET":
 		m.NextHandler.HandleGet(rw, r)
@@ -127,5 +118,4 @@ func (m *RestfulConvertMiddleware) ServeHTTP(rw http.ResponseWriter, r *http.Req
 	default:
 		http.Error(rw, "Unsupported", http.StatusNotImplemented)
 	}
-	m.NextHandler.After(rw, r)
 }
