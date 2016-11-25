@@ -26,7 +26,7 @@ func (h *SomeResource) HandlePost(rw http.ResponseWriter, r *http.Request, ctx c
 func main() {
 
 	mux := http.NewServeMux()
-	mux.Handle("/resource", resty.Ctx(resty.Restful(&SomeResource{})))
+	mux.Handle("/resource", ctxhandler.Ctx(resty.Restful(&SomeResource{})))
 
 	log.Printf("Listening on localhost:8080. Try and send a POST or GET")
 	log.Fatal(http.ListenAndServe(":8080", mux))
