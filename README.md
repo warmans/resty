@@ -10,14 +10,14 @@ go route matching or gorilla mux.
 
 
 ```
-ype SomeResource struct {
+type SomeResource struct {
 	resty.DefaultRESTHandler
 }
 
-func (h *SomeResource) HandleGet(rw http.ResponseWriter, r *http.Request, ctx context.Context) {
+func (h *SomeResource) HandleGet(rw http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(rw, "GET")
 }
-func (h *SomeResource) HandlePost(rw http.ResponseWriter, r *http.Request, ctx context.Context) {
+func (h *SomeResource) HandlePost(rw http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(rw, "POST")
 }
 
